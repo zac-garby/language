@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"time"
 )
 
 var builtins = map[string]*object.Builtin{
@@ -93,6 +94,24 @@ var builtins = map[string]*object.Builtin{
 			}
 
 			return parent
+		},
+	},
+	"sleep": &object.Builtin{
+		Fn: func(this object.Object, args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("expected exactly one argument to 'sleep'")
+			}
+
+			arg := args[0]
+
+			seconds, ok := arg.(*object.Number)
+			if !ok {
+				return newError("expected a number to be passed to 'sleep'")
+			}
+
+			time.Sleep(time.Duration(seconds.Value) * time.Second)
+
+			return NULL
 		},
 	},
 }
