@@ -348,16 +348,8 @@ func (p *Parser) parseGroupedExpression() ast.Expression {
 func (p *Parser) parseIfExpression() ast.Expression {
 	expression := &ast.IfExpression{Token: p.curToken}
 
-	if !p.expectPeek(token.LPAREN) {
-		return nil
-	}
-
 	p.nextToken()
 	expression.Condition = p.parseExpression(LOWEST)
-
-	if !p.expectPeek(token.RPAREN) {
-		return nil
-	}
 
 	if !p.expectPeek(token.LBRACE) {
 		return nil
@@ -393,16 +385,8 @@ func (p *Parser) parseIfExpression() ast.Expression {
 func (p *Parser) parseWhileExpression() ast.Expression {
 	expression := &ast.WhileExpression{Token: p.curToken}
 
-	if !p.expectPeek(token.LPAREN) {
-		return nil
-	}
-
 	p.nextToken()
 	expression.Condition = p.parseExpression(LOWEST)
-
-	if !p.expectPeek(token.RPAREN) {
-		return nil
-	}
 
 	if !p.expectPeek(token.LBRACE) {
 		return nil
@@ -416,10 +400,6 @@ func (p *Parser) parseWhileExpression() ast.Expression {
 func (p *Parser) parseForExpression() ast.Expression {
 	exp := &ast.ForExpression{Token: p.curToken}
 
-	if !p.expectPeek(token.LPAREN) {
-		return nil
-	}
-
 	p.nextToken()
 	exp.Var = p.parseIdentifier()
 
@@ -429,10 +409,6 @@ func (p *Parser) parseForExpression() ast.Expression {
 
 	p.nextToken()
 	exp.Set = p.parseExpression(LOWEST)
-
-	if !p.expectPeek(token.RPAREN) {
-		return nil
-	}
 
 	if !p.expectPeek(token.LBRACE) {
 		return nil
