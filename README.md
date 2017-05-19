@@ -172,35 +172,40 @@ example:
 ```go
 vector := model (x, y);
 
-vec._new = fn () {
+vector._new = fn () {
   print("new vector. x =", this.x, "y =", this.y);
+  return this;
 };
 
-vec._plus = fn (other) {
-  if (type(other) != vec) {
+vector._plus = fn (other) {
+  if (type(other) != vector) {
     err("expected another vector. got", type(other));
   };
-
-  return vec(this.x + other.x, this.y + other.y);
+  
+  return vector(this.x + other.x, this.y + other.y);
 };
 
-vec._in = fn (other) {
+vector._in = fn (other) {
   return other == this.x || other == this.y;
 };
 
-a := vec(1, 2);
-b := vec(3, 4);
-c := a + b;
+a := vector(2, 3);
+print("a =", a);
 
-print(c);
-print(3 in a);
+b := vector(3, 2);
+print("b =", b);
+
+print("3 in b =", 3 in b);
+print("a + b =", a + b);
 ```
 ```shell
 $ ./main
 
-new vector. x = 1 y = 2
-new vector. x = 3 y = 4
-new vector. x = 4 y = 6
-{x: 4, y: 6}
-false
+new vector. x = 2 y = 3 
+a = {x: 2, y: 3} 
+new vector. x = 3 y = 2 
+b = {x: 3, y: 2} 
+3 in b = true 
+new vector. x = 5 y = 5 
+a + b = {x: 5, y: 5} 
 ```
