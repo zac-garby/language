@@ -184,7 +184,7 @@ func (f *Function) Inspect() string {
 func (f *Function) Equals(other Object) bool {
 	switch other := other.(type) {
 	case *Function:
-		return f.Body.String() == other.Body.String()
+		return f.Inspect() == other.Inspect()
 	default:
 		return false
 	}
@@ -209,7 +209,12 @@ func (l *Lambda) Inspect() string {
 		strings.Join(params, ", "), (*l.Body).String())
 }
 func (l *Lambda) Equals(other Object) bool {
-	return false
+	switch other := other.(type) {
+	case *Lambda:
+		return l.Inspect() == other.Inspect()
+	default:
+		return false
+	}
 }
 
 // Builtin
