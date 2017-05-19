@@ -755,7 +755,7 @@ func evalForExpressionOverString(
 	body *ast.BlockStatement,
 	env *object.Environment,
 ) object.Object {
-	result := &object.Array{Elements: []object.Object{}}
+	result := &object.String{Value: ""}
 
 	for elem := 0; elem < len(str.Value); elem++ {
 		e := object.NewEnclosedEnvironment(env)
@@ -779,7 +779,7 @@ func evalForExpressionOverString(
 		}
 
 		if res != nil && res != NULL {
-			result.Elements = append(result.Elements, res)
+			result.Value += res.Inspect()
 		}
 	}
 
