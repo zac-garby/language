@@ -224,8 +224,8 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 		return evalBangOperatorExpression(right)
 	case "-":
 		return evalMinusPrefixOperatorExpression(right)
-	case "~":
-		return evalBitwiseNotPrefixOperatorExpression(right)
+	case "+":
+		return evalMinusPrefixOperatorExpression(evalMinusPrefixOperatorExpression(right))
 	default:
 		return newError("unknown operator: %s%s", operator, right.Type())
 	}
@@ -247,15 +247,6 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 
 	value := right.(*object.Number).Value
 	return &object.Number{Value: -value}
-}
-
-func evalBitwiseNotPrefixOperatorExpression(right object.Object) object.Object {
-	if right.Type() != object.NUMBER_OBJ {
-		return newError("unknown operator: ~%s", right.Type())
-	}
-
-	value := right.(*object.Number).Value
-	return &object.Number{Value: float64(^uint64(value))}
 }
 
 func evalDeclareExpression(
