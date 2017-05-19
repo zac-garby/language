@@ -40,7 +40,11 @@ func runFile() {
 		return
 	}
 
-	_ = evaluator.Eval(program, env)
+	result := evaluator.Eval(program, env)
+	if result.Type() == object.ERROR_OBJ {
+		fmt.Println(result.Inspect())
+		return
+	}
 }
 
 func printParserErrors(errors []string) {

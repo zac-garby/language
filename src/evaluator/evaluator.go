@@ -307,14 +307,14 @@ func evalAssignInfixExpression(
 		obj.Set(fieldId.Value, right)
 		return obj.Get(fieldId.Value)
 	case *object.Model:
-		fn, ok := right.(*object.Function)
-		if !ok {
+		fn := right
+		if fn.Type() != "FUNCTION" {
 			return newError("cannot assign a %v to a model field. expected a function",
 				right.Type())
 		}
 
-		obj.Methods[*fieldId] = fn
-		return obj.Methods[*fieldId]
+		obj.Methods[fieldId] = fn
+		return obj.Methods[fieldId]
 	default:
 		return newError("cannot assign fields of a %v. expected a hash or model",
 			obj.Type())
@@ -586,7 +586,7 @@ func evalHashInfixExpression(
 				fnName)
 		}
 	} else {
-		return newError("operator %v not overloaded. use the special method %v",
+		return newError("operator %v not overloaded. to overload, use the special method %v",
 			operator, fnName)
 	}
 }
@@ -886,12 +886,7 @@ func applyFunction(
 	args []object.Object,
 	env *object.Environment,
 ) object.Object {
-	var thisValue object.Object = &object.Hash{
-		Pairs: map[object.String]object.Object{},
-		Model: object.OBJECT_MODEL,
-	}
-
-	return applyFunctionWithThisValue(fn, thisValue, args, env)
+	return applyFunctionWithThisValue(fn, nil, args, env)
 }
 
 func applyFunctionWithThisValue(
@@ -944,26 +939,28 @@ func applyFunctionWithThisValue(
 			enclosedEnv.Declare(prop.Value, args[i])
 		}
 
-		for i, name := range m.Parent.Properties {
-			val := Eval(m.ParentArgs[i], enclosedEnv)
-			if isError(val) {
-				return val
-			}
+		if m.Parent != nil {
+			for i, name := range m.Parent.Properties {
+				val := Eval(m.ParentArgs[i], enclosedEnv)
+				if isError(val) {
+					return val
+				}
 
-			hash.Set(name.Value, val)
+				hash.Set(name.Value, val)
+			}
 		}
 
 		if _new, ok := hash.Model.GetMethod("_new"); ok {
 			_new.Hash = hash
-			applyFunction(_new, []object.Object{}, env)
+			return applyFunction(_new, []object.Object{}, env)
 		}
 		return hash
 	case *object.MethodInstance:
-		res := applyFunctionWithThisValue(fn.Function, fn.Hash, args, env)
+		res := applyFunctionWithThisValue(*fn.Function, fn.Hash, args, env)
 
 		return res
 	case *object.Builtin:
-		return fn.Fn(args...)
+		return fn.Fn(thisValue, args...)
 	default:
 		return newError("cannot call a %s", fn.Type())
 	}

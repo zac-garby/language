@@ -9,7 +9,7 @@ import (
 
 var builtins = map[string]*object.Builtin{
 	"print": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
+		Fn: func(this object.Object, args ...object.Object) object.Object {
 			for _, arg := range args {
 				fmt.Print(arg.Inspect() + " ")
 			}
@@ -20,7 +20,7 @@ var builtins = map[string]*object.Builtin{
 		},
 	},
 	"err": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
+		Fn: func(this object.Object, args ...object.Object) object.Object {
 			msg := ""
 
 			for _, arg := range args {
@@ -31,7 +31,7 @@ var builtins = map[string]*object.Builtin{
 		},
 	},
 	"str": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
+		Fn: func(this object.Object, args ...object.Object) object.Object {
 			if len(args) != 1 {
 				return newError("expected exactly one argument to 'str'")
 			}
@@ -40,7 +40,7 @@ var builtins = map[string]*object.Builtin{
 		},
 	},
 	"input": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
+		Fn: func(this object.Object, args ...object.Object) object.Object {
 			if len(args) != 1 {
 				return newError("expected exactly one argument to 'input'")
 			}
@@ -55,11 +55,11 @@ var builtins = map[string]*object.Builtin{
 				return newError("could not read a line")
 			}
 
-			return &object.String{Value: text}
+			return &object.String{Value: text[0 : len(text)-1]}
 		},
 	},
 	"type": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
+		Fn: func(this object.Object, args ...object.Object) object.Object {
 			if len(args) != 1 {
 				return newError("expected exactly one argument to 'type'")
 			}
@@ -75,7 +75,7 @@ var builtins = map[string]*object.Builtin{
 		},
 	},
 	"parent": &object.Builtin{
-		Fn: func(args ...object.Object) object.Object {
+		Fn: func(this object.Object, args ...object.Object) object.Object {
 			if len(args) != 1 {
 				return newError("expected exactly one argument to 'type'")
 			}

@@ -7,7 +7,7 @@ import (
 )
 
 type ObjectType string
-type BuiltinFunction func(args ...Object) Object
+type BuiltinFunction func(this Object, args ...Object) Object
 
 const (
 	ERROR_OBJ                  = "ERROR"
@@ -252,4 +252,8 @@ func (a *Array) Equals(other Object) bool {
 	default:
 		return false
 	}
+}
+
+func newError(format string, a ...interface{}) *Error {
+	return &Error{Message: fmt.Sprintf(format, a...)}
 }

@@ -1,0 +1,27 @@
+vector := model (x, y);
+
+vector._new = fn () {
+  print("new vector. x =", this.x, "y =", this.y);
+  return this;
+};
+
+vector._plus = fn (other) {
+  if (type(other) != vector) {
+    err("expected another vector. got", type(other));
+  };
+  
+  return vector(this.x + other.x, this.y + other.y);
+};
+
+vector._in = fn (other) {
+  return other == this.x || other == this.y;
+};
+
+a := vector(2, 3);
+print("a =", a);
+
+b := vector(3, 2);
+print("b =", b);
+
+print("3 in b =", 3 in b);
+print("a + b =", a + b);

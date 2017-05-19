@@ -12,7 +12,7 @@ type Model struct {
 	Parent     *Model
 	ParentArgs []ast.Expression
 	Properties []*ast.Identifier
-	Methods    map[ast.Identifier]*Function
+	Methods    map[*ast.Identifier]Object
 	Id         int64
 }
 
@@ -26,7 +26,7 @@ func NewModelWithParent(parent *Model) *Model {
 	model := &Model{
 		Parent:     parent,
 		Properties: []*ast.Identifier{},
-		Methods:    make(map[ast.Identifier]*Function),
+		Methods:    make(map[*ast.Identifier]Object),
 		Id:         nextModelId,
 	}
 
@@ -46,7 +46,7 @@ func (m *Model) Instantiate(args []Object) Object {
 func (m *Model) GetMethod(name string) (*MethodInstance, bool) {
 	for k, v := range m.Methods {
 		if k.Value == name {
-			return &MethodInstance{Function: v}, true
+			return &MethodInstance{Function: &v}, true
 		}
 	}
 

@@ -66,7 +66,7 @@ func (h *Hash) Set(name string, val Object) {
 // Method Instance
 
 type MethodInstance struct {
-	Function *Function
+	Function *Object
 	Hash     *Hash
 }
 
@@ -75,7 +75,7 @@ func (mi *MethodInstance) Inspect() string  { return "<method instance>" }
 func (mi *MethodInstance) Equals(other Object) bool {
 	switch other := other.(type) {
 	case *MethodInstance:
-		return mi.Function.Equals(other.Function) && mi.Hash.Equals(other.Hash)
+		return (*mi.Function).Equals(*other.Function) && mi.Hash.Equals(other.Hash)
 	default:
 		return false
 	}
