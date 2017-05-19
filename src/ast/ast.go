@@ -265,7 +265,18 @@ func (ml *ModelLiteral) String() string {
 		params = append(params, p.String())
 	}
 
-	return fmt.Sprintf("(model (%v))", strings.Join(params, ", "))
+	if ml.ParentName != nil {
+		parentArgs := []string{}
+		for _, p := range ml.ParentArgs {
+			parentArgs = append(parentArgs, p.String())
+		}
+
+		return fmt.Sprintf("(model (%v) : model (%v))",
+			strings.Join(params, ", "), strings.Join(parentArgs, ", "))
+	}
+
+	return fmt.Sprintf("(model (%v))",
+		strings.Join(params, ", "))
 }
 
 // Lambda expression

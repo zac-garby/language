@@ -6,3 +6,5 @@
   - It would mean that strings can be more easily worked with
  - Add more builtin models
  - Convert all basic types to builtin models
+ - Allow `model (..) : model` (without any parent args.) It should just pass all
+  model args to the parent
