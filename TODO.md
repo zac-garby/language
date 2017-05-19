@@ -5,3 +5,4 @@
   - This would involve making a new object type (char), e.g. 'x' or 'y'
   - It would mean that strings can be more easily worked with
  - Add more builtin models
+ - Convert all basic types to builtin models
