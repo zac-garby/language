@@ -247,6 +247,10 @@ func (a *Array) Inspect() string {
 func (a *Array) Equals(other Object) bool {
 	switch other := other.(type) {
 	case *Array:
+		if len(a.Elements) != len(other.Elements) {
+			return false
+		}
+
 		for i, e := range a.Elements {
 			if !e.Equals(other.Elements[i]) {
 				return false

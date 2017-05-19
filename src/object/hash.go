@@ -28,6 +28,10 @@ func (h *Hash) Inspect() string {
 func (h *Hash) Equals(other Object) bool {
 	switch other := other.(type) {
 	case *Hash:
+		if !h.Model.Equals(other.Model) {
+			return false
+		}
+
 		for k, v := range h.Pairs {
 			if !v.Equals(other.Get(k.Value)) {
 				return false
