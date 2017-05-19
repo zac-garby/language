@@ -705,6 +705,8 @@ func evalForExpression(fe *ast.ForExpression, env *object.Environment) object.Ob
 		return evalForExpressionOverArray(set, varName, fe.Body, env)
 	case *object.Hash:
 		return evalForExpressionOverHash(set, varName, fe.Body, env)
+	case *object.String:
+		return evalForExpressionOverString(set, varName, fe.Body, env)
 	default:
 		return newError("invalid set %v. expected an array or a hash", set.Inspect())
 	}
@@ -719,6 +721,43 @@ func evalForExpressionOverArray(
 	result := &object.Array{Elements: []object.Object{}}
 
 	for elem, _ := range array.Elements {
+		e := object.NewEnclosedEnvironment(env)
+		e.Declare(varName.Value, &object.Number{Value: float64(elem)})
+
+		res := Eval(body, e)
+		if isError(res) {
+			return res
+		}
+
+		if ret, ok := res.(*object.ReturnValue); ok {
+			return ret
+		}
+
+		if lcs, ok := res.(*object.LoopControlStatement); ok {
+			if lcs.Literal == "break" {
+				break
+			} else {
+				continue
+			}
+		}
+
+		if res != nil && res != NULL {
+			result.Elements = append(result.Elements, res)
+		}
+	}
+
+	return result
+}
+
+func evalForExpressionOverString(
+	str *object.String,
+	varName *ast.Identifier,
+	body *ast.BlockStatement,
+	env *object.Environment,
+) object.Object {
+	result := &object.Array{Elements: []object.Object{}}
+
+	for elem := 0; elem < len(str.Value); elem++ {
 		e := object.NewEnclosedEnvironment(env)
 		e.Declare(varName.Value, &object.Number{Value: float64(elem)})
 
