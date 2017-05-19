@@ -223,6 +223,10 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 }
 
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	if p.peekToken.Type == token.SEMI {
+		return &ast.ReturnStatement{Token: p.curToken, ReturnValue: &ast.Null{}}
+	}
+
 	stmt := &ast.ReturnStatement{Token: p.curToken}
 
 	p.nextToken()
