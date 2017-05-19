@@ -265,7 +265,7 @@ func (l *Lexer) readString() string {
 
 func (l *Lexer) readIdentifier() string {
 	position := l.position
-	for isLetter(l.ch) {
+	for isID(l.ch) {
 		l.readChar()
 	}
 	return l.input[position:l.position]
@@ -276,5 +276,9 @@ func isDigit(ch byte) bool {
 }
 
 func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_' || ch == '?'
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+func isID(ch byte) bool {
+	return isLetter(ch) || isDigit(ch)
 }
