@@ -159,6 +159,10 @@ func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Ob
 }
 
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {
+	if len(program.Statements) == 0 {
+		return NULL
+	}
+
 	var result object.Object
 
 	for _, statement := range program.Statements {
@@ -180,6 +184,10 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 }
 
 func evalBlockStatement(block *ast.BlockStatement, env *object.Environment) object.Object {
+	if len(block.Statements) == 0 {
+		return NULL
+	}
+
 	var result object.Object
 
 	for _, statement := range block.Statements {
