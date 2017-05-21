@@ -27,6 +27,35 @@ var (
 )
 
 func InitialiseBuiltinModels() bool {
+	OBJECT_MODEL.Methods = map[*ast.Identifier]Object{
+		newID("type"): &Builtin{
+			Fn: func(this Object, args ...Object) Object {
+				if len(args) != 0 {
+					return newError("no arguments expected to object.type")
+				}
+
+				thisHash := this.(*Hash)
+
+				return thisHash.Model
+			},
+		},
+		newID("parent"): &Builtin{
+			Fn: func(this Object, args ...Object) Object {
+				if len(args) != 0 {
+					return newError("no arguments expected to object.type")
+				}
+
+				thisHash := this.(*Hash)
+
+				if thisHash.Model.Parent != nil {
+					return thisHash.Model.Parent
+				} else {
+					return &Null{}
+				}
+			},
+		},
+	}
+
 	VECTOR_MODEL.Methods = map[*ast.Identifier]Object{
 		newID("_new"): &Builtin{
 			Fn: func(this Object, args ...Object) Object {
