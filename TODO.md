@@ -8,3 +8,4 @@
  - Convert all basic types to builtin models
  - Allow `model (..) : model` (without any parent args.) It should just pass all
   model args to the parent
+ - Make semicolons optional
