@@ -49,7 +49,7 @@ print(result);
 ```shell
 $ ./main
 
-[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
 ```
 
 `1..10` creates an array containing all the integers from 1 to 10 (inclusive.)
