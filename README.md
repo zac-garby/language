@@ -1,9 +1,5 @@
 # Language
 
-## Repository
-This project is hosted on GitHub
-[here](https://github.com/Zac-Garby/language).
-
 ## Intro
 Recently, I've been working on a programming language, in Go. Here's a basic
 hello world program in it:
